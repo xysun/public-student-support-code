@@ -51,15 +51,25 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (uniquify-exp env)
-  (lambda (e)
-    (match e
-      [(Var x)
-       (error "TODO: code goes here (uniquify-exp, symbol?)")]
+  (lambda (exp)
+    (match exp
       [(Int n) (Int n)]
-      [(Let x e body)
-       (error "TODO: code goes here (uniquify-exp, let)")]
       [(Prim op es)
-       (Prim op (for/list ([e es]) ((uniquify-exp env) e)))])))
+       (Prim op (for/list ([e es]) ((uniquify-exp env) e)))]
+      [(Var x) (Var (dict-ref env x))]
+      [(Let x e body)
+
+       (define new-i (add1 (dict-ref env 'i 0)))
+       (define new-x (string->symbol (string-append-immutable "x." (~v new-i))))
+
+       (define new-env
+         (dict-set
+          (dict-set env 'i new-i)
+          x new-x))
+       
+       (Let new-x ((uniquify-exp new-env) e) ((uniquify-exp new-env) body))]
+      )))
+
 
 ;; uniquify : R1 -> R1
 (define (uniquify p)

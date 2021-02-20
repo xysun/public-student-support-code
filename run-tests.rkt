@@ -6,6 +6,7 @@
 (require "interp-Cvar.rkt")
 (require "interp.rkt")
 (require "compiler.rkt")
+(require "type-check-Rvar.rkt")
 ;; (debug-level 1)
 ;; (AST-output-syntax 'concrete-syntax)
 
@@ -13,7 +14,7 @@
 ;; Note that your compiler file (the file that defines the passes)
 ;; should be named "compiler.rkt"
 (define passes
-  `( ("uniquify" ,uniquify ,interp-Rvar)
+  `( ("uniquify" ,uniquify ,interp-Rvar, type-check-Rvar)
      ;; Uncomment the following passes as you finish them.
      ;; ("remove complex opera*" ,remove-complex-opera* ,interp-Rvar)
      ;; ("explicate control" ,explicate-control ,interp-Cvar)
