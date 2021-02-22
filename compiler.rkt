@@ -77,8 +77,34 @@
     [(Program info e) (Program info ((uniquify-exp '()) e))]))
 
 ;; remove-complex-opera* : R1 -> R1
+(define (rco-atom env)
+  (lambda (exp)
+    (match exp
+      [(Int n) (values exp env)]
+      [(Var v) (values exp env)]
+      [(Prim '- (list e)) (values (Var 't1) (dict-set env 't1 (Prim '- (list (rco-exp e)))))]
+      )))
+
+(define (rco-exp e)
+  ; TODO ???
+  (match e
+    [(Int value) e]
+    [(Var v) e]
+    [(Prim 'read '()) e]
+    [(Prim '- (list exp))
+     (define-values (atm env) ((rco-atom '()) exp))
+     ; if atm is a var, turn it to a let binding, otherwise keep the same
+     (match atm
+       [(Int v) (Prim '- (list atm))]
+       [(Var v) (Prim '- (list (Let v (dict-ref env v) atm)))]
+       )]
+    )
+)
+
 (define (remove-complex-opera* p)
-  (error "TODO: code goes here (remove-complex-opera*)"))
+  (match p
+    [(Program info e) (Program info (rco-exp e))]
+  ))
 
 ;; explicate-control : R1 -> C0
 (define (explicate-control p)
