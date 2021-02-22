@@ -3,6 +3,7 @@
 (require racket/fixnum)
 (require "interp-Rint.rkt")
 (require "utilities.rkt")
+(require "mycompiler.rkt")
 (provide (all-defined-out))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -49,57 +50,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HW1 Passes
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(define (uniquify-exp env)
-  (lambda (exp)
-    (match exp
-      [(Int n) (Int n)]
-      [(Prim op es)
-       (Prim op (for/list ([e es]) ((uniquify-exp env) e)))]
-      [(Var x) (Var (dict-ref env x))]
-      [(Let x e body)
-
-       (define new-i (add1 (dict-ref env 'i 0)))
-       (define new-x (string->symbol (string-append-immutable "x." (~v new-i))))
-
-       (define new-env
-         (dict-set
-          (dict-set env 'i new-i)
-          x new-x))
-       
-       (Let new-x ((uniquify-exp new-env) e) ((uniquify-exp new-env) body))]
-      )))
-
-
-;; uniquify : R1 -> R1
 (define (uniquify p)
   (match p
     [(Program info e) (Program info ((uniquify-exp '()) e))]))
 
-;; remove-complex-opera* : R1 -> R1
-(define (rco-atom env)
-  (lambda (exp)
-    (match exp
-      [(Int n) (values exp env)]
-      [(Var v) (values exp env)]
-      [(Prim '- (list e)) (values (Var 't1) (dict-set env 't1 (Prim '- (list (rco-exp e)))))]
-      )))
-
-(define (rco-exp e)
-  ; TODO ???
-  (match e
-    [(Int value) e]
-    [(Var v) e]
-    [(Prim 'read '()) e]
-    [(Prim '- (list exp))
-     (define-values (atm env) ((rco-atom '()) exp))
-     ; if atm is a var, turn it to a let binding, otherwise keep the same
-     (match atm
-       [(Int v) (Prim '- (list atm))]
-       [(Var v) (Prim '- (list (Let v (dict-ref env v) atm)))]
-       )]
-    )
-)
 
 (define (remove-complex-opera* p)
   (match p
