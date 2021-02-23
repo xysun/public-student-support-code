@@ -3,6 +3,7 @@
 (require racket/fixnum)
 (require "interp-Rint.rkt")
 (require "utilities.rkt")
+(require "mycompiler.rkt")
 (provide (all-defined-out))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -49,36 +50,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HW1 Passes
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(define (uniquify-exp env)
-  (lambda (exp)
-    (match exp
-      [(Int n) (Int n)]
-      [(Prim op es)
-       (Prim op (for/list ([e es]) ((uniquify-exp env) e)))]
-      [(Var x) (Var (dict-ref env x))]
-      [(Let x e body)
-
-       (define new-i (add1 (dict-ref env 'i 0)))
-       (define new-x (string->symbol (string-append-immutable "x." (~v new-i))))
-
-       (define new-env
-         (dict-set
-          (dict-set env 'i new-i)
-          x new-x))
-       
-       (Let new-x ((uniquify-exp new-env) e) ((uniquify-exp new-env) body))]
-      )))
-
-
-;; uniquify : R1 -> R1
 (define (uniquify p)
   (match p
     [(Program info e) (Program info ((uniquify-exp '()) e))]))
 
-;; remove-complex-opera* : R1 -> R1
+
 (define (remove-complex-opera* p)
-  (error "TODO: code goes here (remove-complex-opera*)"))
+  (match p
+    [(Program info e) (Program info ((rco-exp '()) e))]
+  ))
 
 ;; explicate-control : R1 -> C0
 (define (explicate-control p)

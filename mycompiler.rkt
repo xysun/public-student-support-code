@@ -1,914 +1,196 @@
-#reader(lib"read.ss""wxme")WXME0109 ## 
-#|
-   This file uses the GRacket editor format.
-   Open this file in DrRacket version 8.0 or later to read it.
+#lang racket
 
-   Most likely, it was created by saving a program in DrRacket,
-   and it probably contains a program with non-text elements
-   (such as images or comment boxes).
+(require racket/dict)
+(require racket/format)
+(provide uniquify-exp rco-exp)
+(require "utilities.rkt")
 
-            http://racket-lang.org/
-|#
- 34 7 #"wxtext\0"
-3 1 6 #"wxtab\0"
-1 1 8 #"wximage\0"
-2 0 8 #"wxmedia\0"
-4 1 34 #"(lib \"syntax-browser.ss\" \"mrlib\")\0"
-1 0 36 #"(lib \"cache-image-snip.ss\" \"mrlib\")\0"
-1 0 68
-(0
- #"((lib \"image-core.ss\" \"mrlib\") (lib \"image-core-wxme.rkt\" \"mrl"
- #"ib\"))\x00"
-) 1 0 16 #"drscheme:number\0"
-3 0 44 #"(lib \"number-snip.ss\" \"drscheme\" \"private\")\0"
-1 0 36 #"(lib \"comment-snip.ss\" \"framework\")\0"
-1 0 79
-(1
- #"((lib \"srcloc-snip.rkt\" \"framework\") (lib \"wxme-srcloc-snip.rkt"
- #"\" \"framework\"))\x00"
-) 1 0 93
-(2
- #"((lib \"collapsed-snipclass.ss\" \"framework\") (lib \"collapsed-snip"
- #"class-wxme.ss\" \"framework\"))\x00"
-) 0 0 43 #"(lib \"collapsed-snipclass.ss\" \"framework\")\0"
-0 0 19 #"drscheme:sexp-snip\0"
-0 0 29 #"drscheme:bindings-snipclass%\0"
-1 0 101
-(3
- #"((lib \"ellipsis-snip.rkt\" \"drracket\" \"private\") (lib \"ellipsis"
- #"-snip-wxme.rkt\" \"drracket\" \"private\"))\x00"
-) 2 0 88
-(4
- #"((lib \"pict-snip.rkt\" \"drracket\" \"private\") (lib \"pict-snip.rk"
- #"t\" \"drracket\" \"private\"))\x00"
-) 0 0 55
-#"((lib \"snip.rkt\" \"pict\") (lib \"snip-wxme.rkt\" \"pict\"))\0"
-1 0 34 #"(lib \"bullet-snip.rkt\" \"browser\")\0"
-0 0 25 #"(lib \"matrix.ss\" \"htdp\")\0"
-1 0 22 #"drscheme:lambda-snip%\0"
-1 0 29 #"drclickable-string-snipclass\0"
-0 0 26 #"drracket:spacer-snipclass\0"
-0 0 57
-#"(lib \"hrule-snip.rkt\" \"macro-debugger\" \"syntax-browser\")\0"
-1 0 26 #"drscheme:pict-value-snip%\0"
-0 0 45 #"(lib \"image-snipr.ss\" \"slideshow\" \"private\")\0"
-1 0 38 #"(lib \"pict-snipclass.ss\" \"slideshow\")\0"
-2 0 55 #"(lib \"vertical-separator-snip.ss\" \"stepper\" \"private\")\0"
-1 0 18 #"drscheme:xml-snip\0"
-1 0 31 #"(lib \"xml-snipclass.ss\" \"xml\")\0"
-1 0 21 #"drscheme:scheme-snip\0"
-2 0 34 #"(lib \"scheme-snipclass.ss\" \"xml\")\0"
-1 0 10 #"text-box%\0"
-1 0 32 #"(lib \"text-snipclass.ss\" \"xml\")\0"
-1 0 1 6 #"wxloc\0"
-          0 0 59 0 1 #"\0"
-0 75 1 #"\0"
-0 12 90 -1 90 -1 3 -1 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 255 255 255 1 -1 0 9
-#"Standard\0"
-0 75 6 #"Menlo\0"
-0 12 90 -1 90 -1 3 -1 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 255 255 255 1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0 0 0 -1 -1 2 24
-#"framework:default-color\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1 1 1 150 0 150 0 0 0 -1 -1 2 15
-#"text:ports out\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 150 0 150 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1.0 0 -1 -1 93 -1 -1 -1 0 0 0 0 0 0 0 0 0 1.0 1.0 1.0 255 0 0 0 0 0 -1
--1 2 15 #"text:ports err\0"
-0 -1 1 #"\0"
-1 0 -1 -1 93 -1 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 255 0 0 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1 1 1 0 0 175 0 0 0 -1 -1 2 17
-#"text:ports value\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 0 175 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1.0 0 92 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1.0 1.0 1.0 34 139 34 0 0 0 -1
--1 2 27 #"Matching Parenthesis Style\0"
-0 -1 1 #"\0"
-1.0 0 92 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1.0 1.0 1.0 34 139 34 0 0 0 -1
--1 2 1 #"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 38 38 128 0 0 0 -1 -1 2 37
-#"framework:syntax-color:scheme:symbol\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 38 38 128 0 0 0 -1 -1 2 38
-#"framework:syntax-color:scheme:keyword\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 38 38 128 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 194 116 31 0 0 0 -1 -1 2
-38 #"framework:syntax-color:scheme:comment\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 194 116 31 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 41 128 38 0 0 0 -1 -1 2 37
-#"framework:syntax-color:scheme:string\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 41 128 38 0 0 0 -1 -1 2 35
-#"framework:syntax-color:scheme:text\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 41 128 38 0 0 0 -1 -1 2 39
-#"framework:syntax-color:scheme:constant\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 41 128 38 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 132 60 36 0 0 0 -1 -1 2 49
-#"framework:syntax-color:scheme:hash-colon-keyword\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 132 60 36 0 0 0 -1 -1 2 42
-#"framework:syntax-color:scheme:parenthesis\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 132 60 36 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 255 0 0 0 0 0 -1 -1 2 36
-#"framework:syntax-color:scheme:error\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 255 0 0 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 -1 -1 2 36
-#"framework:syntax-color:scheme:other\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 -1 -1 2 16
-#"Misspelled Text\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 81 112 203 0 0 0 -1 -1 2
-38 #"drracket:check-syntax:lexically-bound\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 81 112 203 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 178 34 34 0 0 0 -1 -1 2 28
-#"drracket:check-syntax:set!d\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 178 34 34 0 0 0 -1 -1 2 37
-#"drracket:check-syntax:unused-require\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 255 0 0 0 0 0 -1 -1 2 36
-#"drracket:check-syntax:free-variable\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 255 0 0 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 68 0 203 0 0 0 -1 -1 2 31
-#"drracket:check-syntax:imported\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 68 0 203 0 0 0 -1 -1 2 47
-#"drracket:check-syntax:my-obligation-style-pref\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 178 34 34 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 116 0 0 0 0 -1 -1 2 50
-#"drracket:check-syntax:their-obligation-style-pref\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 116 0 0 0 0 -1 -1 2 48
-#"drracket:check-syntax:unk-obligation-style-pref\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 139 142 28 0 0 0 -1 -1 2
-49 #"drracket:check-syntax:both-obligation-style-pref\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 139 142 28 0 0 0 -1 -1 2
-26 #"plt:htdp:test-coverage-on\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 1 0 0 0 0 0 0 255 165 0 0 0 0 -1 -1 2 27
-#"plt:htdp:test-coverage-off\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 1 0 0 0 0 0 0 255 165 0 0 0 0 -1 -1 4 1
-#"\0"
-0 70 1 #"\0"
-1.0 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 1.0 1.0 1.0 1.0 1.0 1.0 0 0 0 0 0 0
--1 -1 4 4 #"XML\0"
-0 70 1 #"\0"
-1.0 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 1.0 1.0 1.0 1.0 1.0 1.0 0 0 0 0 0 0
--1 -1 2 37 #"plt:module-language:test-coverage-on\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 -1 -1 2 38
-#"plt:module-language:test-coverage-off\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 93 -1 -1 0 1 0 0 0 1 0 0 0 0 0 0 255 165 0 0 0 0 -1 -1 0 36
-#"mrlib/syntax-browser:subtitle-color\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 1 0 0 0 0 0 0 36 36 140 255 255 255 -1
--1 0 42 #"mrlib/syntax-browser:focused-syntax-color\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 1 0 0 0 0 0 0 34 139 34 255 255 255 -1
--1 4 1 #"\0"
-0 71 1 #"\0"
-1.0 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 1.0 1.0 1.0 1.0 1.0 1.0 0 0 0 0 0 0
--1 -1 4 1 #"\0"
-0 -1 1 #"\0"
-1.0 0 -1 -1 -1 -1 -1 -1 1 0 0 0 0 0 0 0 0 1.0 1.0 1.0 0 0 255 0 0 0 -1
--1 4 1 #"\0"
-0 71 1 #"\0"
-1.0 0 -1 -1 -1 -1 -1 -1 1 0 0 0 0 0 0 0 0 1.0 1.0 1.0 0 0 255 0 0 0 -1
--1 4 1 #"\0"
-0 71 1 #"\0"
-1.0 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1.0 1.0 1.0 0 100 0 0 0 0 -1
--1 2 1 #"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1 1 1 200 0 0 0 0 0 -1 -1 4 1
-#"\0"
-0 -1 1 #"\0"
-1.0 0 92 -1 -1 -1 -1 -1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 255 255 0 -1 -1
-          0 475 0 28 3 12 #"#lang racket"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 7 #"require"
-0 0 24 3 1 #" "
-0 0 14 3 11 #"racket/dict"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 7 #"require"
-0 0 24 3 1 #" "
-0 0 14 3 13 #"racket/format"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 7 #"provide"
-0 0 24 3 1 #" "
-0 0 14 3 8 #"uniquify"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 7 #"require"
-0 0 24 3 1 #" "
-0 0 19 3 15 #"\"utilities.rkt\""
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 16 #"; represent Rvar"
-0 0 24 29 1 #"\n"
-0 0 17 3 24 #"; operations: read, -, +"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 9         325 21           0 0           0 53 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"Int"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"value"
-0 0 24 3 2 #"))"
-0 0 17 3 1 #";"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"Prim"
-0 0 24 3 2 #" ("
-0 0 14 3 2 #"op"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"args"
-0 0 24 3 2 #"))"
-0 0 17 3 1 #";"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"Program"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"info"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"body"
-0 0 24 3 2 #"))"
-0 0 17 3 1 #";"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"Var"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"var"
-0 0 24 3 2 #"))"
-0 0 17 3 1 #";"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"Let"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"var"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"e"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"body"
-0 0 24 3 2 #"))"
-0 0 17 3 1 #";"
-0 0 24 29 1 #"\n"
-0           0 0 0 24 29 1 #"\n"
-0 0 17 3 21 #";interpreter for Rvar"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 1 #" "
-0 0 14 3 17 #"interp-Rvar-class"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 5 #"class"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"object%"
-0 0 24 29 1 #"\n"
-0 0 24 3 5 #"    ("
-0 0 14 3 9 #"super-new"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 5 #"    ("
-0 0 15 3 13 #"define/public"
-0 0 24 3 3 #" (("
-0 0 14 3 10 #"interp-exp"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"env"
-0 0 24 3 2 #") "
-0 0 14 3 1 #"e"
-0 0 24 3 2 #") "
-0 0 17 3 10 #"; currying"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 15 3 5 #"match"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"e"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        [("
-0 0 14 3 3 #"Int"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 2 #") "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #"]"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        [("
-0 0 14 3 4 #"Prim"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 14 3 4 #"read"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 24 3 3 #"())"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"         ("
-0 0 15 3 6 #"define"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"r"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"read"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"         ("
-0 0 15 3 4 #"cond"
-0 0 24 3 3 #" [("
-0 0 14 3 7 #"fixnum?"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"r"
-0 0 24 3 2 #") "
-0 0 14 3 1 #"r"
-0 0 24 3 1 #"]"
-0 0 24 29 1 #"\n"
-0 0 24 3 16 #"               ["
-0 0 14 3 4 #"else"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"error"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 14 3 10 #"interp-exp"
-0 0 24 3 1 #" "
-0 0 19 3 1 #"\""
-0 0 19 3 8 #"expected"
-0 0 19 3 1 #" "
-0 0 19 3 2 #"an"
-0 0 19 3 8 #" integer"
-0 0 19 3 1 #"\""
-0 0 24 3 1 #" "
-0 0 14 3 1 #"r"
-0 0 24 3 4 #")])]"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        [("
-0 0 14 3 4 #"Prim"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 14 3 1 #"-"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"e"
-0 0 24 3 4 #")) ("
-0 0 14 3 1 #"-"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 3 #" (("
-0 0 14 3 10 #"interp-exp"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"env"
-0 0 24 3 2 #") "
-0 0 14 3 1 #"e"
-0 0 24 3 3 #"))]"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        [("
-0 0 14 3 4 #"Prim"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 14 3 1 #"+"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"e1"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"e2"
-0 0 24 3 4 #")) ("
-0 0 14 3 1 #"+"
-0 0 24 3 3 #" (("
-0 0 14 3 10 #"interp-exp"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"env"
-0 0 24 3 2 #") "
-0 0 14 3 2 #"e1"
-0 0 24 3 4 #") (("
-0 0 14 3 10 #"interp-exp"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"env"
-0 0 24 3 2 #") "
-0 0 14 3 2 #"e2"
-0 0 24 3 3 #"))]"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        [("
-0 0 14 3 3 #"Var"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 3 #") ("
-0 0 14 3 8 #"dict-ref"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"env"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 2 #")]"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        [("
-0 0 14 3 3 #"Let"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"e"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"body"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"         ("
-0 0 15 3 6 #"define"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"new-env"
-0 0 24 3 2 #" ("
-0 0 14 3 8 #"dict-set"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"env"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 3 #" (("
-0 0 14 3 10 #"interp-exp"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"env"
-0 0 24 3 2 #") "
-0 0 14 3 1 #"e"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 11 #"         (("
-0 0 14 3 10 #"interp-exp"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"new-env"
-0 0 24 3 2 #") "
-0 0 14 3 4 #"body"
-0 0 24 3 2 #")]"
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"      ))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 5 #"    ("
-0 0 15 3 13 #"define/public"
-0 0 24 3 2 #" ("
-0 0 14 3 14 #"interp-program"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"p"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 15 3 5 #"match"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"p"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        [("
-0 0 14 3 7 #"Program"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 24 3 3 #"() "
-0 0 14 3 1 #"e"
-0 0 24 3 4 #") (("
-0 0 14 3 10 #"interp-exp"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 24 3 4 #"()) "
-0 0 14 3 1 #"e"
-0 0 24 3 4 #")]))"
-0 0 24 29 1 #"\n"
-0 0 24 3 4 #"    "
-0 0 24 29 1 #"\n"
-0 0 24 3 5 #"    )"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 11 #"interp-Rvar"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"p"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 4 #"send"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"new"
-0 0 24 3 1 #" "
-0 0 14 3 17 #"interp-Rvar-class"
-0 0 24 3 2 #") "
-0 0 14 3 14 #"interp-program"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"p"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 33 #"; representing X86Int, NOT X86Var"
-0 0 24 29 1 #"\n"
-0 9         895 21           0 0           0 148 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"Imm"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"value"
-0 0 24 3 3 #")) "
-0 0 17 3 5 #"; int"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"Reg"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"name"
-0 0 24 3 3 #")) "
-0 0 17 3 10 #"; register"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"Deref"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"reg"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"offset"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"Instr"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"name"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"arg*"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"Callq"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"target"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"arity"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"Retq"
-0 0 24 3 4 #" ())"
-0 0 24 29 1 #"\n"
-0 0 17 3 65
-#"; note: Pushq and Popq are not defined in the public support code"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"Pushq"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"src"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"Popq"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"dest"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"Jmp"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"target"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"Block"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"info"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"instr*"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 10 #"X86Program"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"info"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"CFG"
-0 0 24 3 3 #")) "
-0 0 17 3 64
-#"; CFG = control flow graph, right now is a map of label -> block"
-0 0 24 29 1 #"\n"
-0 0 17 3 8 #"; no Pus"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 46 #"; extra structs for CVar intermediate language"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 8 #"CProgram"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"info"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"CFG"
-0 0 24 3 2 #"))"
-0 0 17 3 54 #"; CFG same as above; info is a list of local variables"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"Return"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"arg"
-0 0 24 3 2 #"))"
-0 0 17 3 1 #";"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"Seq"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"stmt"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tail"
-0 0 24 3 2 #"))"
-0 0 17 3 1 #";"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"struct"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"Assign"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"lhs"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"rhs"
-0 0 24 3 2 #"))"
-0 0 17 3 1 #";"
-0 0 24 29 1 #"\n"
-0           0 0 0 24 29 1 #"\n"
-0 0 17 3 15 #"; uniquify pass"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 12 #"uniquify-exp"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"env"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"exp"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 5 #"    ("
-0 0 15 3 5 #"match"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"exp"
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"      [("
-0 0 14 3 3 #"Int"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 3 #") ("
-0 0 14 3 3 #"Int"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 2 #")]"
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"      [("
-0 0 14 3 4 #"Prim"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"op"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"es"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"       ("
-0 0 14 3 4 #"Prim"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"op"
-0 0 24 3 2 #" ("
-0 0 15 3 8 #"for/list"
-0 0 24 3 3 #" (["
-0 0 14 3 1 #"e"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"es"
-0 0 24 3 5 #"]) (("
-0 0 14 3 12 #"uniquify-exp"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"env"
-0 0 24 3 2 #") "
-0 0 14 3 1 #"e"
-0 0 24 3 4 #")))]"
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"      [("
-0 0 14 3 3 #"Var"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 3 #") ("
-0 0 14 3 3 #"Var"
-0 0 24 3 2 #" ("
-0 0 14 3 8 #"dict-ref"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"env"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 3 #"))]"
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"      [("
-0 0 14 3 3 #"Let"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"e"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"body"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"       ("
-0 0 15 3 6 #"define"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"new-i"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"add1"
-0 0 24 3 2 #" ("
-0 0 14 3 8 #"dict-ref"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"env"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 14 3 1 #"i"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"       ("
-0 0 15 3 6 #"define"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"new-x"
-0 0 24 3 2 #" ("
-0 0 14 3 14 #"string->symbol"
-0 0 24 3 2 #" ("
-0 0 14 3 23 #"string-append-immutable"
-0 0 24 3 1 #" "
-0 0 19 3 1 #"\""
-0 0 19 3 3 #"x.\""
-0 0 24 3 2 #" ("
-0 0 14 3 2 #"~v"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"new-i"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"       ("
-0 0 15 3 6 #"define"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"new-env"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"         ("
-0 0 14 3 8 #"dict-set"
-0 0 24 29 1 #"\n"
-0 0 24 3 11 #"          ("
-0 0 14 3 8 #"dict-set"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"env"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 14 3 1 #"i"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"new-i"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"          "
-0 0 14 3 1 #"x"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"new-x"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"       "
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"       ("
-0 0 14 3 3 #"Let"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"new-x"
-0 0 24 3 3 #" (("
-0 0 14 3 12 #"uniquify-exp"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"new-env"
-0 0 24 3 2 #") "
-0 0 14 3 1 #"e"
-0 0 24 3 4 #") (("
-0 0 14 3 12 #"uniquify-exp"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"new-env"
-0 0 24 3 2 #") "
-0 0 14 3 4 #"body"
-0 0 24 3 3 #"))]"
-0 0 24 29 1 #"\n"
-0 0 24 3 9 #"      )))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 8 #"uniquify"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"p"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 5 #"match"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"p"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"    [("
-0 0 14 3 7 #"Program"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"info"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"e"
-0 0 24 3 3 #") ("
-0 0 14 3 7 #"Program"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"info"
-0 0 24 3 3 #" (("
-0 0 14 3 12 #"uniquify-exp"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 24 3 4 #"()) "
-0 0 14 3 1 #"e"
-0 0 24 3 5 #"))]))"
-0           0
+; represent Rvar
+; operations: read, -, +
+
+; (struct Int (value));
+; (struct Prim (op args));
+; (struct Program (info body));
+; (struct Var (var));
+; (struct Let (var e body));
+; 
+
+;interpreter for Rvar
+(define interp-Rvar-class
+  (class object%
+    (super-new)
+
+    (define/public ((interp-exp env) e) ; currying
+      (match e
+        [(Int n) n]
+        [(Prim 'read '())
+         (define r (read))
+         (cond [(fixnum? r) r]
+               [else (error 'interp-exp "expected an integer" r)])]
+        [(Prim '- (list e)) (- 0 ((interp-exp env) e))]
+        [(Prim '+ (list e1 e2)) (+ ((interp-exp env) e1) ((interp-exp env) e2))]
+        [(Var x) (dict-ref env x)]
+        [(Let x e body)
+         (define new-env (dict-set env x ((interp-exp env) e)))
+         ((interp-exp new-env) body)]
+      ))
+
+    (define/public (interp-program p)
+      (match p
+        [(Program '() e) ((interp-exp '()) e)]))
+    
+    )
+)
+
+(define (interp-Rvar p)
+  (send (new interp-Rvar-class) interp-program p))
+
+; representing X86Int, NOT X86Var
+; (struct Imm (value)) ; int
+; (struct Reg (name)) ; register
+; (struct Deref (reg offset))
+; (struct Instr (name arg*))
+; (struct Callq (target arity))
+; (struct Retq ())
+; ; note: Pushq and Popq are not defined in the public support code
+; (struct Pushq (src))
+; (struct Popq (dest))
+; (struct Jmp (target))
+; (struct Block (info instr*))
+; (struct X86Program (info CFG)) ; CFG = control flow graph, right now is a map of label -> block
+; ; no Pus
+; 
+; ; extra structs for CVar intermediate language
+; (struct CProgram (info CFG)); CFG same as above; info is a list of local variables
+; (struct Return (arg));
+; (struct Seq (stmt tail));
+; (struct Assign (lhs rhs));
+; 
+
+; uniquify pass
+
+(define (uniquify-exp env)
+  (lambda (exp)
+    (match exp
+      [(Int n) (Int n)]
+      [(Prim op es)
+       (Prim op (for/list ([e es]) ((uniquify-exp env) e)))]
+      [(Var x) (Var (dict-ref env x))]
+      [(Let x e body)
+
+       ; TODO: use (gen-var)
+       (define new-i (add1 (dict-ref env 'i 0)))
+       (define new-x (string->symbol (string-append-immutable "x." (~v new-i))))
+
+       (define new-env
+         (dict-set
+          (dict-set env 'i new-i)
+          x new-x))
+       
+       (Let new-x ((uniquify-exp new-env) e) ((uniquify-exp new-env) body))]
+      )))
+
+
+; pass 2: remove complex operands;
+; arguments of operations: -, + are atomic
+(define (gen-var env)
+  (define new-i (add1 (dict-ref env 'i 0)))
+  (define new-x (string->symbol (string-append-immutable "tmp." (~v new-i))))
+  (define new-env (dict-set env 'i new-i))
+  (values new-x new-env)
+  )
+
+
+(define (rco-atom env)
+  (lambda (exp)
+    (match exp
+      [(Int n) (values exp env)]
+      [(Var v) (values exp env)]
+      [(Prim '- (list e))
+       (define-values (tmp-var new-env) (gen-var env))
+       ; for the e
+       (define-values (tmp-var-2 env2) ((rco-atom new-env) e))
+       (match tmp-var-2
+         [(Int v) (values (Var tmp-var) (dict-set env2 tmp-var exp))]
+         [(Var v) (values (Var tmp-var) (dict-set env2 tmp-var (Let v (dict-ref env2 v) (Prim '- (list tmp-var-2)))))]
+         )]
+
+      
+      [(Prim '+ (list e1 e2))
+       
+       (define-values (tmp-var new-env) (gen-var env))
+       ; for the es
+       (define-values (tmp2 env2) ((rco-atom new-env) e1))
+       (define-values (tmp3 env3) ((rco-atom env2) e2))
+       (match (list tmp2 tmp3)
+         [(list (Int i1) (Int i2)) (values (Var tmp-var) (dict-set env3 tmp-var exp))]
+         [(list (Var v1) (Int i2)) (values (Var tmp-var) (dict-set env3 tmp-var (Let v1 (dict-ref env3 v1) (Prim '+ (list tmp2 tmp3)))))]
+         [(list (Int i1) (Var v2)) (values (Var tmp-var) (dict-set env3 tmp-var (Let v2 (dict-ref env3 v2) (Prim '+ (list tmp2 tmp3)))))]
+         [(list (Var v1) (Var v2)) (values (Var tmp-var) (dict-set env3 tmp-var (Let v1 (dict-ref env3 v1) (Let v2 (dict-ref env3 v2) (Prim '+ (list tmp2 tmp3))))))]
+         )
+       ]
+      ; let: naive variable
+      ; optimization: if body == var, then the let binding can just be `e`
+      [(Let var e body)
+       (define-values (tmp-var new-env) (gen-var env))
+       (match body
+         [(Var v)
+          (cond
+            [(eq? v var) (values (Var tmp-var) (dict-set new-env tmp-var e))]
+            [else (values (Var tmp-var) (dict-set new-env tmp-var exp))]
+            )]
+         [else (values (Var tmp-var) (dict-set new-env tmp-var exp))]
+      )])
+  ))
+
+(define (rco-exp env)
+  (lambda (e)
+  (match e
+    [(Int value) e]
+    [(Var v) e]
+    [(Prim 'read '()) e]
+    [(Prim '- (list exp))
+     (define-values (atm new-env) ((rco-atom env) exp))
+     (match atm
+       [(Int v) e]
+       [(Var tmp)
+        (cond
+          [(dict-has-key? new-env tmp) (Let tmp (dict-ref new-env tmp) (Prim '- (list atm)))]
+          [else e])
+        ])
+     ]
+    [(Prim '+ (list e1 e2))
+     (define-values (atm1 env1) ((rco-atom env) e1))
+     (define-values (atm2 env2) ((rco-atom env1) e2))
+     (match (list atm1 atm2) ; TODO: lots of duplicate with rco-atom
+       
+       [(list (Int i1) (Int i2)) e]
+       [(list (Int i1) (Var v2))
+        (cond
+          [(dict-has-key? env2 v2) (Let v2 (dict-ref env2 v2) (Prim '+ (list atm1 atm2)))]
+          [else e])
+        ]
+       [(list (Var v1) (Int i2))
+        (cond
+          [(dict-has-key? env2 v1) (Let v1 (dict-ref env2 v1) (Prim '+ (list atm1 atm2)))]
+          [else e])
+        ]
+       [(list (Var v1) (Var v2))
+        (cond
+          [(dict-has-key? env2 v1)
+           (cond
+             [(dict-has-key? env2 v2) (Let v1 (dict-ref env2 v1) (Let v2 (dict-ref env2 v2) (Prim '+ (list atm1 atm2))))]
+             [else (Let v1 (dict-ref env2 v1) (Prim '+ (list atm1 e2))) ])] ; v1 is new, v2 is original
+          [else
+           (cond
+             [(dict-has-key? env2 v2) (Let v2 (dict-ref env2 v2) (Prim '+ (list e1 atm2))) ]; v1 is original v2 is new
+             [else e])])
+        ]
+    )]
+    [(Let var exp body)
+     (define e1 ((rco-exp env) exp))
+     (define e2 ((rco-exp env) body))
+     (Let var e1 e2)
+     ]
+    )
+))

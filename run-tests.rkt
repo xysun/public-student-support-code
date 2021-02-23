@@ -16,7 +16,7 @@
 (define passes
   `( ("uniquify" ,uniquify ,interp-Rvar, type-check-Rvar)
      ;; Uncomment the following passes as you finish them.
-     ;; ("remove complex opera*" ,remove-complex-opera* ,interp-Rvar)
+     ("remove complex opera*" ,remove-complex-opera* ,interp-Rvar, type-check-Rvar)
      ;; ("explicate control" ,explicate-control ,interp-Cvar)
      ;; ("instruction selection" ,select-instructions ,interp-x86-0)
      ;; ("assign homes" ,assign-homes ,interp-x86-0)
@@ -39,6 +39,7 @@
           (string=? r (car (string-split p "_"))))
         all-tests)))
 
+(debug-level 1)
 (interp-tests "var" #f passes interp-Rvar "var_test" (tests-for "var"))
 
 ;; Uncomment the following when all the passes are complete to
