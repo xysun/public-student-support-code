@@ -130,11 +130,18 @@
          )
        ]
       ; let: naive variable
+      ; optimization: if body == var, then the let binding can just be `e`
       [(Let var e body)
        (define-values (tmp-var new-env) (gen-var env))
-       (values (Var tmp-var) (dict-set new-env tmp-var exp))]
-      ))
-  )
+       (match body
+         [(Var v)
+          (cond
+            [(eq? v var) (values (Var tmp-var) (dict-set new-env tmp-var e))]
+            [else (values (Var tmp-var) (dict-set new-env tmp-var exp))]
+            )]
+         [else (values (Var tmp-var) (dict-set new-env tmp-var exp))]
+      )])
+  ))
 
 (define (rco-exp env)
   (lambda (e)
