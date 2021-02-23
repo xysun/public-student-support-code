@@ -57,7 +57,7 @@
 
 (define (remove-complex-opera* p)
   (match p
-    [(Program info e) (Program info (rco-exp e))]
+    [(Program info e) (Program info ((rco-exp '()) e))]
   ))
 
 ;; explicate-control : R1 -> C0
