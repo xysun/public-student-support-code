@@ -2,7 +2,7 @@
 
 (require racket/dict)
 (require racket/format)
-(provide uniquify-exp rco-exp)
+(provide uniquify-exp rco-exp explicate-tail)
 (require "utilities.rkt")
 
 ; represent Rvar
@@ -194,3 +194,36 @@
      ]
     )
 ))
+
+; pass 3: explicate control
+(define (explicate-tail e)
+  (match e
+    [(Int n) (Return e)]
+    [(Var v) (Return e)]
+    [(Prim op es) (Return e)] ; is this right?
+    [(Let x rhs body)
+     (define cont (explicate-tail body))
+     (explicate-assign rhs x cont)]
+    [else (error "explicate-tail unhandled case" e)]
+    )
+  )
+
+(define (assign-return x tail cont)
+  ; replace last Return from tail by Assign, then attach cont
+  (match tail
+    [(Return e) (Seq (Assign (Var x) e) cont)]
+    [(Seq stmt tl) (Seq stmt (assign-return x tl cont))]))
+    
+
+(define (explicate-assign e x cont)
+  (match e
+    [(Int n) (Seq (Assign (Var x) e) cont)]
+    [(Var v) (Seq (Assign (Var x) e) cont)]
+    [(Prim op es) (Seq (Assign (Var x) e) cont)]
+    [(Let _ _ _)
+     (define let-result (explicate-tail e))
+     (assign-return x let-result cont)
+     ]
+    [else (error "explicate-assign unhandled case" e)]
+    )
+  )
