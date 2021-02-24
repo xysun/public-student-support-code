@@ -62,7 +62,14 @@
 
 ;; explicate-control : R1 -> C0
 (define (explicate-control p)
-  (error "TODO: code goes here (explicate-control)"))
+  (match p
+  [(Program info e)
+    (define cvar (explicate-tail e))
+    ;(println cvar)
+    (CProgram info `((start . ,cvar)))
+  ]
+  )
+)
 
 ;; select-instructions : C0 -> pseudo-x86
 (define (select-instructions p)
