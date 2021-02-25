@@ -90,7 +90,7 @@
       (define ss (dict-ref env 'stack-space 0))
       ; make sure it's divisible by 16
       (define ss16 (cond [(zero? (remainder ss 16)) ss] [else (+ 8 ss)]))
-      (X86Program info `((start . ,new-block) (stack-space . ,ss16)))
+      (X86Program (dict-set info 'stack-space ss16) `((start . ,new-block)))
     ]
   ))
 
