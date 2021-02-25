@@ -90,13 +90,24 @@
       (define ss (dict-ref env 'stack-space 0))
       ; make sure it's divisible by 16
       (define ss16 (cond [(zero? (remainder ss 16)) ss] [else (+ 8 ss)]))
-      (X86Program info `((start . ,new-block) (stack-space . ,ss16)))
+      (X86Program (dict-set info 'stack-space ss16) `((start . ,new-block)))
     ]
   ))
 
 ;; patch-instructions : psuedo-x86 -> x86
 (define (patch-instructions p)
-  (error "TODO: code goes here (patch-instructions)"))
+  (match p
+    [(X86Program info dict)
+      (define block (dict-ref dict 'start))
+      (match block
+        [(Block blockinfo instrs) 
+        (define patched-instrs (flatten (map patch-instructions-instr instrs))) 
+        (define new-block (Block blockinfo patched-instrs))
+        (X86Program info (dict-set dict 'start new-block))
+        ]
+      )
+    ]
+  ))
 
 ;; print-x86 : x86 -> string
 (define (print-x86 p)
