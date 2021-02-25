@@ -77,13 +77,22 @@
     [(CProgram info `((start . ,tail)))
       (define instrs (select-instructions-tail tail '()))
       (define block (Block '() instrs))
-      (X86Program '() `((start . ,block)))
+      (X86Program info `((start . ,block)))
     ]
   ))
 
 ;; assign-homes : pseudo-x86 -> pseudo-x86
 (define (assign-homes p)
-  (error "TODO: code goes here (assign-homes)"))
+  (match p
+    [(X86Program info dict)
+      (define block (dict-ref dict 'start))
+      (define-values (new-block env) (assign-homes-block block '()))
+      (define ss (dict-ref env 'stack-space 0))
+      ; make sure it's divisible by 16
+      (define ss16 (cond [(zero? (remainder ss 16)) ss] [else (+ 8 ss)]))
+      (X86Program info `((start . ,new-block) (stack-space . ,ss16)))
+    ]
+  ))
 
 ;; patch-instructions : psuedo-x86 -> x86
 (define (patch-instructions p)
