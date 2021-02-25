@@ -73,7 +73,13 @@
 
 ;; select-instructions : C0 -> pseudo-x86
 (define (select-instructions p)
-  (error "TODO: code goes here (select-instructions)"))
+  (match p
+    [(CProgram info `((start . ,tail)))
+      (define instrs (select-instructions-tail tail '()))
+      (define block (Block '() instrs))
+      (X86Program '() `((start . ,block)))
+    ]
+  ))
 
 ;; assign-homes : pseudo-x86 -> pseudo-x86
 (define (assign-homes p)

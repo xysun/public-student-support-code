@@ -2,7 +2,7 @@
 
 (require racket/dict)
 (require racket/format)
-(provide uniquify-exp rco-exp explicate-tail)
+(provide uniquify-exp rco-exp explicate-tail select-instructions-tail)
 (require "utilities.rkt")
 
 ; represent Rvar
@@ -227,3 +227,35 @@
     [else (error "explicate-assign unhandled case" e)]
     )
   )
+
+; pass 4: select instructions
+(define (select-instructions-atm atm)
+  (match atm
+    [(Var v) atm]
+    [(Int i) (Imm i)]
+    ))
+
+(define (select-instructions-stmt stmt) ; return list of instructions
+  (match stmt
+    [(Assign var exp)
+     (match exp
+       [(or (Var _) (Int _)) (list (Instr 'movq (list (select-instructions-atm exp) var)))]
+       [(Prim 'read _) (list (Instr 'callq 'read_int) (Instr 'movq (list (Reg 'rax) var)))]
+       ; optimization for var = (+ arg var); only need one addq
+       [(or (Prim '+ (list v atm)) (Prim '+ (list atm v))) #:when (eq? v var) (list (Instr 'addq (list (select-instructions-atm atm) var)))]
+       [(Prim '+ (list atm1 atm2)) (list (Instr 'movq (list (select-instructions-atm atm1) var)) (Instr 'addq (list (select-instructions-atm atm2) var)))]
+       [(Prim '- (list atm)) (list (Instr 'movq (list (select-instructions-atm atm) var)) (Instr 'negq (list var)))]
+       )]))
+
+(define (select-instructions-tail tail acc)
+  (define last-instr (Jmp 'conclusion))
+  (match tail
+    [(Return exp) ; turn this into a stmt of (Assign (Var %rax) exp)
+     (define stmt (Assign (Reg 'rax) exp))
+     (append acc (select-instructions-stmt stmt) (list last-instr))
+       ]
+    [(Seq stmt tl)
+     (define stmt-instr (append acc (select-instructions-stmt stmt)))
+     (select-instructions-tail tl stmt-instr)]
+    ))
+
