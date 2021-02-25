@@ -111,4 +111,30 @@
 
 ;; print-x86 : x86 -> string
 (define (print-x86 p)
-  (error "TODO: code goes here (print-x86)"))
+  (define ending (list 
+  ""
+  "  .global _main"
+  "_main:"
+  "  pushq %rbp"
+  "  movq %rsp, %rbp"
+  "  subq $16, %rsp"
+  "  jmp _start"
+  ""
+  "_conclusion:"
+  "  addq $16, %rsp"
+  "  popq %rbp"
+  "  retq"
+  ))
+  (match p
+    [(X86Program info dict)
+      (define block (dict-ref dict 'start))
+      (match block
+        [(Block binfo instrs)
+        (define instrs-s (map print-instruction instrs))
+        (define beginning (list "_start:"))
+        (string-join (append beginning instrs-s ending) "\n")
+        ]
+      )
+    ]
+  )
+)

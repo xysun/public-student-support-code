@@ -1,1 +1,1 @@
-(let ([a 42]) (let ([b a]) (let ([c b]) (+ 2 c))))
+(let ([a 40]) (let ([b a]) (let ([c b]) (+ 2 c))))

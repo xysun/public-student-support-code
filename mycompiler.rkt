@@ -2,7 +2,7 @@
 
 (require racket/dict)
 (require racket/format)
-(provide uniquify-exp rco-exp explicate-tail select-instructions-tail assign-homes-block patch-instructions-instr)
+(provide uniquify-exp rco-exp explicate-tail select-instructions-tail assign-homes-block patch-instructions-instr print-instruction)
 (require "utilities.rkt")
 
 ; represent Rvar
@@ -323,3 +323,18 @@
         ]
        [else (list instr)])]
     [else (list instr)]))
+
+; pass 7: print individual instructions
+(define (print-atm atm)
+  (match atm
+    [(Imm i) (format "$~a" i)]
+    [(Reg r) (format "%~a" r)]
+    [(Deref reg offset) (format "~a(~a)" (number->string offset) (print-atm (Reg reg)))]
+    ))
+
+(define (print-instruction instr)
+  (match instr
+    [(Jmp label) (format "jmp _~a" label)]
+    [(Instr 'negq (list arg)) (format "negq ~a" (print-atm arg))]
+    [(Instr 'addq (list a1 a2)) (format "addq ~a, ~a" (print-atm a1) (print-atm a2))]
+    [(Instr 'movq (list a1 a2)) (format "movq ~a, ~a" (print-atm a1) (print-atm a2))]))
