@@ -2,7 +2,7 @@
 
 (require racket/dict)
 (require racket/format)
-(provide uniquify-exp rco-exp explicate-tail select-instructions-tail)
+(provide uniquify-exp rco-exp explicate-tail select-instructions-tail assign-homes-block)
 (require "utilities.rkt")
 
 ; represent Rvar
@@ -33,14 +33,14 @@
         [(Let x e body)
          (define new-env (dict-set env x ((interp-exp env) e)))
          ((interp-exp new-env) body)]
-      ))
+        ))
 
     (define/public (interp-program p)
       (match p
         [(Program '() e) ((interp-exp '()) e)]))
     
     )
-)
+  )
 
 (define (interp-Rvar p)
   (send (new interp-Rvar-class) interp-program p))
@@ -140,60 +140,60 @@
             [else (values (Var tmp-var) (dict-set new-env tmp-var exp))]
             )]
          [else (values (Var tmp-var) (dict-set new-env tmp-var exp))]
-      )])
-  ))
+         )])
+    ))
 
 (define (rco-exp env)
   (lambda (e)
-  (match e
-    [(Int value) e]
-    [(Var v) e]
-    [(Prim 'read '()) e]
-    [(Prim '- (list exp))
-     (define-values (atm new-env) ((rco-atom env) exp))
-     (match atm
-       [(Int v) e]
-       [(Var tmp)
-        (cond
-          [(dict-has-key? new-env tmp) (Let tmp (dict-ref new-env tmp) (Prim '- (list atm)))]
-          [else e])
-        ])
-     ]
-    [(Prim '+ (list e1 e2))
-     (define-values (atm1 env1) ((rco-atom env) e1))
-     (define-values (atm2 env2) ((rco-atom env1) e2))
-     (match (list atm1 atm2) ; TODO: lots of duplicate with rco-atom
+    (match e
+      [(Int value) e]
+      [(Var v) e]
+      [(Prim 'read '()) e]
+      [(Prim '- (list exp))
+       (define-values (atm new-env) ((rco-atom env) exp))
+       (match atm
+         [(Int v) e]
+         [(Var tmp)
+          (cond
+            [(dict-has-key? new-env tmp) (Let tmp (dict-ref new-env tmp) (Prim '- (list atm)))]
+            [else e])
+          ])
+       ]
+      [(Prim '+ (list e1 e2))
+       (define-values (atm1 env1) ((rco-atom env) e1))
+       (define-values (atm2 env2) ((rco-atom env1) e2))
+       (match (list atm1 atm2) ; TODO: lots of duplicate with rco-atom
        
-       [(list (Int i1) (Int i2)) e]
-       [(list (Int i1) (Var v2))
-        (cond
-          [(dict-has-key? env2 v2) (Let v2 (dict-ref env2 v2) (Prim '+ (list atm1 atm2)))]
-          [else e])
-        ]
-       [(list (Var v1) (Int i2))
-        (cond
-          [(dict-has-key? env2 v1) (Let v1 (dict-ref env2 v1) (Prim '+ (list atm1 atm2)))]
-          [else e])
-        ]
-       [(list (Var v1) (Var v2))
-        (cond
-          [(dict-has-key? env2 v1)
-           (cond
-             [(dict-has-key? env2 v2) (Let v1 (dict-ref env2 v1) (Let v2 (dict-ref env2 v2) (Prim '+ (list atm1 atm2))))]
-             [else (Let v1 (dict-ref env2 v1) (Prim '+ (list atm1 e2))) ])] ; v1 is new, v2 is original
-          [else
-           (cond
-             [(dict-has-key? env2 v2) (Let v2 (dict-ref env2 v2) (Prim '+ (list e1 atm2))) ]; v1 is original v2 is new
-             [else e])])
-        ]
-    )]
-    [(Let var exp body)
-     (define e1 ((rco-exp env) exp))
-     (define e2 ((rco-exp env) body))
-     (Let var e1 e2)
-     ]
-    )
-))
+         [(list (Int i1) (Int i2)) e]
+         [(list (Int i1) (Var v2))
+          (cond
+            [(dict-has-key? env2 v2) (Let v2 (dict-ref env2 v2) (Prim '+ (list atm1 atm2)))]
+            [else e])
+          ]
+         [(list (Var v1) (Int i2))
+          (cond
+            [(dict-has-key? env2 v1) (Let v1 (dict-ref env2 v1) (Prim '+ (list atm1 atm2)))]
+            [else e])
+          ]
+         [(list (Var v1) (Var v2))
+          (cond
+            [(dict-has-key? env2 v1)
+             (cond
+               [(dict-has-key? env2 v2) (Let v1 (dict-ref env2 v1) (Let v2 (dict-ref env2 v2) (Prim '+ (list atm1 atm2))))]
+               [else (Let v1 (dict-ref env2 v1) (Prim '+ (list atm1 e2))) ])] ; v1 is new, v2 is original
+            [else
+             (cond
+               [(dict-has-key? env2 v2) (Let v2 (dict-ref env2 v2) (Prim '+ (list e1 atm2))) ]; v1 is original v2 is new
+               [else e])])
+          ]
+         )]
+      [(Let var exp body)
+       (define e1 ((rco-exp env) exp))
+       (define e2 ((rco-exp env) body))
+       (Let var e1 e2)
+       ]
+      )
+    ))
 
 ; pass 3: explicate control
 (define (explicate-tail e)
@@ -253,9 +253,56 @@
     [(Return exp) ; turn this into a stmt of (Assign (Var %rax) exp)
      (define stmt (Assign (Reg 'rax) exp))
      (append acc (select-instructions-stmt stmt) (list last-instr))
-       ]
+     ]
     [(Seq stmt tl)
      (define stmt-instr (append acc (select-instructions-stmt stmt)))
      (select-instructions-tail tl stmt-instr)]
     ))
 
+; pass 5: assign homes, allocate var on stack
+(define (assign-homes-arg arg env)
+  (match arg
+    [(Var v)
+     (cond
+       [(dict-has-key? env v) (values (dict-ref env v) env)]
+       [else
+        (define i (dict-ref env 'stack-space 0))
+        (define offset (+ 8 i))
+        (define env1 (dict-set env 'stack-space offset))
+        (define deref (Deref 'rbp (- offset)))
+        (define env2 (dict-set env1 v deref))
+        (values deref env2)
+        ])]
+    [else (values arg env)]))
+
+; 1 to 1 mapping
+(define (assign-homes-instr instr env)
+  (match instr
+    [(Instr ins (list arg1 arg2))
+      (define-values (h1 e1) (assign-homes-arg arg1 env))
+      (define-values (h2 e2) (assign-homes-arg arg2 e1))
+      (values (Instr ins (list h1 h2)) e2)]
+    [(Instr ins (list arg))
+     (define-values (h e) (assign-homes-arg arg env))
+     (values (Instr ins (list h)) e)]
+    ; note: pushq and popq are not defined
+    ; otherwise the same
+    [else (values instr env)])
+  )
+   
+(define (assign-homes-block block env) ; return (block, env); env is used later to get stack-space
+  (define (proc arg acc) ; `acc is a pair (list-of-instrs, env)
+    (define hs-so-far (car acc))
+    (define e (cdr acc))
+    (define-values (h new-e) (assign-homes-instr arg e))
+    (cons (cons h hs-so-far) new-e)
+    )
+  (match block
+    [(Block info instrs)
+     ; here I need to use a foldl
+     (define init (cons '() env))
+     (define result (foldl proc init instrs))
+     (define reversed-instrs (car result))
+     (values (Block info (reverse reversed-instrs)) (cdr result))]))
+     
+  
