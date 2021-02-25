@@ -22,7 +22,7 @@
      ("instruction selection" ,select-instructions ,interp-pseudo-x86-0)
      ("assign homes" ,assign-homes ,interp-x86-0)
      ("patch instructions" ,patch-instructions ,interp-x86-0)
-     ;; ("print x86" ,print-x86 #f)
+     ("print x86" ,print-x86 #f)
      ))
 
 ;; all the files in the tests/ directory with extension ".rkt".
@@ -45,5 +45,5 @@
 
 ;; Uncomment the following when all the passes are complete to
 ;; test the final x86 code.
-;; (compiler-tests "var" #f passes "var_test" (tests-for "var"))
+(compiler-tests "var" #f passes "var_test" (tests-for "var"))
 
