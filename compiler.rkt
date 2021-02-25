@@ -96,7 +96,18 @@
 
 ;; patch-instructions : psuedo-x86 -> x86
 (define (patch-instructions p)
-  (error "TODO: code goes here (patch-instructions)"))
+  (match p
+    [(X86Program info dict)
+      (define block (dict-ref dict 'start))
+      (match block
+        [(Block blockinfo instrs) 
+        (define patched-instrs (flatten (map patch-instructions-instr instrs))) 
+        (define new-block (Block blockinfo patched-instrs))
+        (X86Program info (dict-set dict 'start new-block))
+        ]
+      )
+    ]
+  ))
 
 ;; print-x86 : x86 -> string
 (define (print-x86 p)

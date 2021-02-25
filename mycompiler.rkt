@@ -2,7 +2,7 @@
 
 (require racket/dict)
 (require racket/format)
-(provide uniquify-exp rco-exp explicate-tail select-instructions-tail assign-homes-block)
+(provide uniquify-exp rco-exp explicate-tail select-instructions-tail assign-homes-block patch-instructions-instr)
 (require "utilities.rkt")
 
 ; represent Rvar
@@ -305,4 +305,21 @@
      (define reversed-instrs (car result))
      (values (Block info (reverse reversed-instrs)) (cdr result))]))
      
-  
+; pass 6 patch instructions
+; only apply to Instr with 2 args
+; return a list of instr, size either 1 or 2
+(define (patch-instructions-instr instr)
+  (match instr
+    [(Instr ins (list arg1 arg2))
+     (match (list arg1 arg2)
+       [(list (Deref reg1 offset1) (Deref reg2 offset2))
+        ; addq deref1 deref2 => movq deref1 rax; addq rax deref2
+        ; note: we do not have subq, we only have negq
+        ; movq deref1 deref2 => movq deref1 rax; movq rax deref2;
+        ; the rule is: movq deref1 rax; ins rax deref2
+        (list
+         (Instr 'movq (list arg1 (Reg 'rax)))
+         (Instr ins (list (Reg 'rax) arg2)))
+        ]
+       [else (list instr)])]
+    [else (list instr)]))
