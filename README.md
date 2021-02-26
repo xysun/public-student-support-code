@@ -1,3 +1,12 @@
+I'm following the book [Essentials of Compilation](https://github.com/IUCompilerCourse/Essentials-of-Compilation) together with this repo. Majority of my code is in `mycompiler.rkt`.
+
+Progress:
+- [x] Chapter 2: RVar to x86
+
+
+---
+Original README
+
 ## Homework instructions
 
 For your homework exercises, you will be expected to implement various
